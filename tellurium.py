@@ -129,7 +129,9 @@ def parse(cmd):
         tape[selected] = int(tape[selected])
 
     elif cmd == "a":
-        int(tape[selected]) += int(tape[selected+1])
+        a = int(tape[selected])
+        b = int(tape[selected+1])
+        a += b
 
     elif cmd == "s":
         tape[selected] -= tape[selected+1]
