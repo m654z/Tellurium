@@ -77,6 +77,9 @@ def parse(cmd):
         else:
             print(chr(tape[selected]))
 
+    elif cmd == "%":
+        tape[selected] = ord(tape[selected])
+
     elif cmd == "#":
         tape[selected] = 0
 
