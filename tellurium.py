@@ -1,0 +1,111 @@
+import string, sys
+
+tape = [0] * 25500
+selected = 0
+
+def prompt():
+    cmd = input("> ")
+    return cmd
+
+def read(cmd):
+    commands = len(cmd)
+    tokens = list(cmd)
+    for i in range(0, commands):
+        parse(tokens[i])
+
+def parse(cmd):
+    global tape
+    global selected
+    
+    if cmd == "+":
+        if isinstance(tape[selected], str):
+            print("Error: selected tape object is a string!")
+        else:
+            tape[selected] += 1
+
+    elif cmd == "-":
+        if isinstance(tape[selected], str):
+            print("Error: selected tape object is a string!")
+        else:
+            tape[selected] -= 1
+
+    elif cmd == ">":
+        selected += 1
+
+    elif cmd == "<":
+        selected -= 1
+
+    elif cmd == "*":
+        print(selected)
+
+    elif cmd == "^":
+        print(tape[selected])
+
+    elif cmd == "!":
+        if isinstance(tape[selected], str):
+            print(tape[selected])
+        else:
+            print(chr(tape[selected]))
+
+    elif cmd == "#":
+        tape[selected] = 0
+
+    elif cmd == "$":
+        selected = 0
+
+    elif cmd == "/":
+        if isinstance(tape[selected], str):
+            print("Error: selected tape object is a string!")
+        else:
+            tape[selected] += 10
+
+    elif cmd == "\\":
+        if isinstance(tape[selected], str):
+            print("Error: selected tape object is a string!")
+        else:
+            tape[selected] -= 10
+
+    elif cmd == "{":
+        selected += 10
+
+    elif cmd == "}":
+        selected -= 10
+
+    elif cmd == '"':
+        if isinstance(tape[selected], str):
+            print("Error: selected tape object is a string!")
+        else:
+            tape[selected] += 100
+
+    elif cmd == "'":
+        if isinstance(tape[selected], str):
+            print("Error: selected tape object is a string!")
+        else:
+            tape[selected] -= 100
+
+    elif cmd == "-":
+        selected += 100
+
+    elif cmd == "_":
+        selected -= 100
+
+    elif cmd == "i":
+        tape[selected] = input(">> ")
+
+    elif cmd == "n":
+        tape[selected] = int(tape[selected])
+
+    elif cmd == "a":
+        tape[selected] += tape[selected+1]
+
+    elif cmd == "s":
+        tape[selected] -= tape[selected+1]
+
+    elif cmd == "m":
+        tape[selected] *= tape[selected+1]
+
+    elif cmd == "d":
+        tape[selected] /= tape[selected+1]
+
+while 1:
+    read(prompt())
