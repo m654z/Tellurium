@@ -1,6 +1,10 @@
 import string, sys
 
 tape = [0] * 25500
+readingNum = False
+readingIf = False
+num = []
+code = []
 selected = 0
 
 def prompt():
@@ -15,9 +19,35 @@ def read(cmd):
 
 def parse(cmd):
     global tape
+    global readingNum
+    global readingIf
+    global num
+    global code
     global selected
+
+    if readingNum == True:
+        if cmd == "[":
+            readingNum = False
+            readingIf = True
+
+        else:
+            num.append(cmd)
+
+    elif readingIf == True:
+        if cmd == "]":
+            readingIf = False
+            if tape[selected] == int(''.join(num)):
+                read(code)
+                code = []
+                num = []
+
+            else:
+                return
+
+        else:
+            code.append(cmd)
     
-    if cmd == "+":
+    elif cmd == "+":
         if isinstance(tape[selected], str):
             print("Error: selected tape object is a string!")
         else:
@@ -106,6 +136,9 @@ def parse(cmd):
 
     elif cmd == "d":
         tape[selected] /= tape[selected+1]
+
+    elif cmd == "(":
+        readingNum = True
 
 while 1:
     read(prompt())
