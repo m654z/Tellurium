@@ -48,16 +48,10 @@ def parse(cmd):
             code.append(cmd)
     
     elif cmd == "+":
-        if isinstance(tape[selected], str):
-            print("Error: selected tape object is a string!")
-        else:
-            tape[selected] += 1
+        tape[selected] += 1
 
     elif cmd == "-":
-        if isinstance(tape[selected], str):
-            print("Error: selected tape object is a string!")
-        else:
-            tape[selected] -= 1
+        tape[selected] -= 1
 
     elif cmd == ">":
         selected += 1
@@ -87,16 +81,10 @@ def parse(cmd):
         selected = 0
 
     elif cmd == "/":
-        if isinstance(tape[selected], str):
-            print("Error: selected tape object is a string!")
-        else:
-            tape[selected] += 10
+        tape[selected] += 10
 
     elif cmd == "\\":
-        if isinstance(tape[selected], str):
-            print("Error: selected tape object is a string!")
-        else:
-            tape[selected] -= 10
+        tape[selected] -= 10
 
     elif cmd == "{":
         selected += 10
@@ -105,16 +93,10 @@ def parse(cmd):
         selected -= 10
 
     elif cmd == '"':
-        if isinstance(tape[selected], str):
-            print("Error: selected tape object is a string!")
-        else:
-            tape[selected] += 100
+        tape[selected] += 100
 
     elif cmd == "'":
-        if isinstance(tape[selected], str):
-            print("Error: selected tape object is a string!")
-        else:
-            tape[selected] -= 100
+        tape[selected] -= 100
 
     elif cmd == "-":
         selected += 100
