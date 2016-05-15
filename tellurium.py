@@ -189,5 +189,8 @@ def parse(cmd):
     elif cmd == "[":
         readingLoopAmount = True
 
+    elif cmd == "p":
+        return
+
 while 1:
     read(prompt())
