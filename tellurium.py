@@ -111,18 +111,16 @@ def parse(cmd):
         tape[selected] = int(tape[selected])
 
     elif cmd == "a":
-        a = int(tape[selected])
-        b = int(tape[selected+1])
-        a += b
+        tape[selected] = int(tape[selected]) + int(tape[selected+1])
 
     elif cmd == "s":
-        tape[selected] -= tape[selected+1]
+        tape[selected] = int(tape[selected]) - int(tape[selected+1])
 
     elif cmd == "m":
-        tape[selected] *= tape[selected+1]
+        tape[selected] = int(tape[selected]) * int(tape[selected+1])
 
     elif cmd == "d":
-        tape[selected] /= tape[selected+1]
+        tape[selected] = int(tape[selected]) / int(tape[selected+1])
 
     elif cmd == "(":
         readingNum = True
