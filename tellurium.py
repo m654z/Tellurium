@@ -7,6 +7,7 @@ readingStr = False
 readingLoopAmount = False
 readingLoopCode = False
 loopInf = False
+string = True
 num = []
 code = []
 text = []
@@ -32,6 +33,7 @@ def parse(cmd):
     global readingLoopAmount
     global readingLoopCode
     global loopInf
+    global string
     global num
     global code
     global text
@@ -39,7 +41,17 @@ def parse(cmd):
     global loopAmount
     global selected
 
-    if readingLoopAmount == True:
+    if string == True:
+        if cmd == "r":
+            tape[selected] = tape[selected].reverse()
+
+        if cmd == "u":
+            tape[selected] = tape[selected].upper()
+
+        if cmd == "l":
+            tape[slected] = tape[selected].lower()
+
+    elif readingLoopAmount == True:
         if cmd == "|":
             readingLoopAmount = False
             readingLoopCode = True
@@ -194,6 +206,9 @@ def parse(cmd):
 
     elif cmd == ".":
         exit
+
+    elif cmd == "&":
+        string = True
 
 while 1:
     read(prompt())
