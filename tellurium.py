@@ -3,8 +3,15 @@ import string, sys
 tape = [0] * 25500
 readingNum = False
 readingIf = False
+readingStr = False
+readingLoopAmount = False
+readingLoopCode = False
+loopInf = False
 num = []
 code = []
+text = []
+loopCode = []
+loopAmount = []
 selected = 0
 
 def prompt():
@@ -21,11 +28,56 @@ def parse(cmd):
     global tape
     global readingNum
     global readingIf
+    global readingStr
+    global readingLoopAmount
+    global readingLoopCode
+    global loopInf
     global num
     global code
+    global text
+    global loopCode
+    global loopAmount
     global selected
 
-    if readingNum == True:
+    if readingLoopAmount == True:
+        if cmd == "|":
+            readingLoopAmount = False
+            readingLoopCode = True
+
+        elif cmd == "i":
+            loopInf = True
+
+        else:
+            loopAmount.append(cmd)
+
+    elif readingLoopCode == True:
+        if cmd == "]":
+            readingLoopCode = False
+            if loopInf == True:
+                while 1:
+                    read(loopCode)
+
+            else:
+                for i in range(0, int(''.join(loopAmount))):
+                    read(loopCode)
+
+            loopCode = []
+            loopAmount = []
+
+        else:
+            loopCode.append(cmd)
+
+    elif readingStr == True:
+        if cmd == "~":
+            readingStr = False
+            text = ''.join(text).replace("µ", "")
+            tape[selected] = text
+            text = []
+
+        else:
+            text.append(cmd)
+
+    elif readingNum == True:
         if cmd == "[":
             readingNum = False
             readingIf = True
@@ -130,6 +182,12 @@ def parse(cmd):
 
     elif cmd == "x":
         tape[selected] = tape[selected-1]
+
+    elif cmd == "µ":
+        readingStr = True
+
+    elif cmd == "[":
+        readingLoopAmount = True
 
 while 1:
     read(prompt())
