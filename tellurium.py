@@ -51,6 +51,9 @@ def parse(cmd):
         if cmd == "l":
             tape[slected] = tape[selected].lower()
 
+        if cmd == ".":
+            string = False
+
     elif readingLoopAmount == True:
         if cmd == "|":
             readingLoopAmount = False
