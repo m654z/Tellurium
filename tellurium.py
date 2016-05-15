@@ -25,7 +25,7 @@ def parse(cmd):
     global code
     global selected
 
-    if readingNum == True:
+    elif readingNum == True:
         if cmd == "[":
             readingNum = False
             readingIf = True
@@ -126,6 +126,9 @@ def parse(cmd):
 
     elif cmd == "(":
         readingNum = True
+
+    elif cmd == "c":
+        tape[selected] = tape[selected+1]
 
 while 1:
     read(prompt())
