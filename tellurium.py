@@ -127,10 +127,10 @@ def parse(cmd):
     elif cmd == "(":
         readingNum = True
 
-    elif cmd == "c":
+    elif cmd == "z":
         tape[selected] = tape[selected+1]
 
-    elif cmd == "d":
+    elif cmd == "x":
         tape[selected] = tape[selected-1]
 
 while 1:
