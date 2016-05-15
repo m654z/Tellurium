@@ -25,7 +25,7 @@ def parse(cmd):
     global code
     global selected
 
-    elif readingNum == True:
+    if readingNum == True:
         if cmd == "[":
             readingNum = False
             readingIf = True
