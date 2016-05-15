@@ -130,5 +130,8 @@ def parse(cmd):
     elif cmd == "c":
         tape[selected] = tape[selected+1]
 
+    elif cmd == "d":
+        tape[selected] = tape[selected-1]
+
 while 1:
     read(prompt())
