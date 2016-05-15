@@ -192,5 +192,8 @@ def parse(cmd):
     elif cmd == "p":
         return
 
+    elif cmd == ".":
+        exit
+
 while 1:
     read(prompt())
