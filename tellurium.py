@@ -7,7 +7,8 @@ readingStr = False
 readingLoopAmount = False
 readingLoopCode = False
 loopInf = False
-string = True
+string = False
+isChar = False
 num = []
 code = []
 text = []
@@ -34,6 +35,7 @@ def parse(cmd):
     global readingLoopCode
     global loopInf
     global string
+    global isChar
     global num
     global code
     global text
@@ -98,12 +100,28 @@ def parse(cmd):
             readingIf = True
 
         else:
+            if isinstance(cmd, str):
+                isChar = True
+
+            elif cmd.isdigit():
+                cmd = int(cmd)
+                
             num.append(cmd)
 
     elif readingIf == True:
         if cmd == "]":
             readingIf = False
-            if tape[selected] == int(''.join(num)):
+            if isChar == True:
+                if [selected] == ''.join(num):
+                    read(code)
+                    code = []
+                    num = []
+                    isChar = False
+
+                else:
+                    return
+                
+            elif tape[selected] == int(''.join(num)):
                 read(code)
                 code = []
                 num = []
