@@ -7,6 +7,7 @@ readingStr = False
 readingLoopAmount = False
 readingLoopCode = False
 readingRand = False
+readingRand2 = False
 loopInf = False
 loopRand = False
 string = False
@@ -15,6 +16,7 @@ num = []
 code = []
 text = []
 rand = []
+rand2 = []
 loopCode = []
 loopAmount = []
 selected = 0
@@ -37,6 +39,7 @@ def parse(cmd):
     global readingLoopAmount
     global readingLoopCode
     global readingRand
+    global readingRand2
     global loopInf
     global loopRand
     global string
@@ -45,6 +48,7 @@ def parse(cmd):
     global code
     global text
     global rand
+    global rand2
     global loopCode
     global loopAmount
     global selected
@@ -55,6 +59,13 @@ def parse(cmd):
 
         else:
             rand.append(cmd)
+
+    if readingRand2 == True:
+        if cmd == "|":
+            readingRand2 = False
+
+        else:
+            rand2.append(cmd)
 
     elif string == True:
         if cmd == "r":
@@ -91,13 +102,22 @@ def parse(cmd):
                     read(loopCode)
 
             if loopRand == True:
-                if rand == []:
+                if rand and rand2 == []:
                     for i in range(0, random.randint(0, 100)):
                         read(loopCode)
 
                 else:
-                    for i in range(0, random.randint(0, int(''.join(rand)))):
-                        read(loopCode)
+                    if rand2 == []:
+                        for i in range(0, random.randint(0, int(''.join(rand)))):
+                            read(loopCode)
+
+                    elif rand == []:
+                        for i in range(0, random.randint(int(''.join(rand2)), 100)):
+                            read(loopCode)
+
+                    else:
+                        for i in range(0, random.randint(int(''.join(rand2)), int(''.join(rand)))):
+                            read(loopCode)
                 
             else:
                 for i in range(0, int(''.join(loopAmount))):
@@ -256,8 +276,17 @@ def parse(cmd):
     elif cmd == "&":
         string = True
 
-    elif cmd == "r":
+    elif cmd == "→":
+        if rand != []:
+            rand = []
+            
         readingRand = True
+
+    elif cmd == "←":
+        if rand2 != []:
+            rand2 = []
+            
+        readingRand2 = True
 
 while 1:
     read(prompt())
