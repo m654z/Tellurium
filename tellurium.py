@@ -1,4 +1,4 @@
-import string, sys
+import string, sys, random
 
 tape = [0] * 25500
 readingNum = False
@@ -6,12 +6,15 @@ readingIf = False
 readingStr = False
 readingLoopAmount = False
 readingLoopCode = False
+readingRand = False
 loopInf = False
+loopRand = False
 string = False
 isChar = False
 num = []
 code = []
 text = []
+rand = []
 loopCode = []
 loopAmount = []
 selected = 0
@@ -33,17 +36,27 @@ def parse(cmd):
     global readingStr
     global readingLoopAmount
     global readingLoopCode
+    global readingRand
     global loopInf
+    global loopRand
     global string
     global isChar
     global num
     global code
     global text
+    global rand
     global loopCode
     global loopAmount
     global selected
 
-    if string == True:
+    if readingRand == True:
+        if cmd == "|":
+            readingRand = False
+
+        else:
+            rand.append(cmd)
+
+    elif string == True:
         if cmd == "r":
             tape[selected] = tape[selected].reverse()
 
@@ -64,6 +77,9 @@ def parse(cmd):
         elif cmd == "i":
             loopInf = True
 
+        elif cmd == "r":
+            loopRand = True
+
         else:
             loopAmount.append(cmd)
 
@@ -74,6 +90,15 @@ def parse(cmd):
                 while 1:
                     read(loopCode)
 
+            if loopRand == True:
+                if rand == []:
+                    for i in range(0, random.randint(0, 100)):
+                        read(loopCode)
+
+                else:
+                    for i in range(0, random.randint(0, int(''.join(rand)))):
+                        read(loopCode)
+                
             else:
                 for i in range(0, int(''.join(loopAmount))):
                     read(loopCode)
@@ -230,6 +255,9 @@ def parse(cmd):
 
     elif cmd == "&":
         string = True
+
+    elif cmd == "r":
+        readingRand = True
 
 while 1:
     read(prompt())
