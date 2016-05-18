@@ -1,4 +1,4 @@
-import string, sys, random, time
+import string, sys, random, time, codecs
 
 tape = [0] * 25500
 readingNum = False
@@ -293,6 +293,9 @@ def parse(cmd):
 
     elif cmd == "¨":
         time.sleep(1)
+
+    elif cmd == "r":
+        tape[selected] = codecs.encode(str(tape[selected]), 'rot_13')
 
 while 1:
     read(prompt())
