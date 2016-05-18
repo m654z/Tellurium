@@ -1,4 +1,4 @@
-import string, sys, random
+import string, sys, random, time
 
 tape = [0] * 25500
 readingNum = False
@@ -287,6 +287,12 @@ def parse(cmd):
             rand2 = []
             
         readingRand2 = True
+
+    elif cmd == "t":
+        tape[selected] = str(time.ctime())
+
+    elif cmd == "¨":
+        time.sleep(1)
 
 while 1:
     read(prompt())
