@@ -1,19 +1,22 @@
 import string, sys, random, time, codecs
 
 tape = [0] * 25500
-readingNum = False
-readingIf = False
+funcs = {}
 readingStr = False
 readingLoopAmount = False
 readingLoopCode = False
 readingRand = False
 readingRand2 = False
+readingFName = False
+readingFCode = False
+readingName = False
 loopInf = False
 loopRand = False
 string = False
 isChar = False
-num = []
-code = []
+tempName = []
+fName = []
+fCode = []
 text = []
 rand = []
 rand2 = []
@@ -26,6 +29,12 @@ def prompt():
     return cmd
 
 def read(cmd):
+    if "!K" in cmd:
+        cmd = cmd.replace("!K", "1000")
+
+    if "!H" in cmd:
+        cmd = cmd.replace("!H", "100")
+        
     commands = len(cmd)
     tokens = list(cmd)
     for i in range(0, commands):
@@ -33,19 +42,22 @@ def read(cmd):
 
 def parse(cmd):
     global tape
-    global readingNum
-    global readingIf
+    global funcs
     global readingStr
     global readingLoopAmount
     global readingLoopCode
     global readingRand
     global readingRand2
+    global readingFName
+    global readingFCode
+    global readingName
     global loopInf
     global loopRand
     global string
     global isChar
-    global num
-    global code
+    global tempName
+    global fName
+    global fCode
     global text
     global rand
     global rand2
@@ -53,14 +65,44 @@ def parse(cmd):
     global loopAmount
     global selected
 
-    if readingRand == True:
+    if readingName == True:
+        if cmd == ".":
+            readingName = False
+            name = ''.join(tempName)
+            read(funcs[name])
+            tempName = []
+
+        else:
+            tempName.append(cmd)
+
+    elif readingFName == True:
+        if cmd == "|":
+            readingFName = False
+            readingFCode = True
+
+        else:
+            fName.append(cmd)
+
+    elif readingFCode == True:
+        if cmd == "`":
+            readingFCode = False
+            name = ''.join(fName)
+            code = ''.join(fCode)
+            funcs[name] = code
+            fName = []
+            fCode = []
+
+        else:
+            fCode.append(cmd)
+
+    elif readingRand == True:
         if cmd == "|":
             readingRand = False
 
         else:
             rand.append(cmd)
 
-    if readingRand2 == True:
+    elif readingRand2 == True:
         if cmd == "|":
             readingRand2 = False
 
@@ -138,44 +180,6 @@ def parse(cmd):
 
         else:
             text.append(cmd)
-
-    elif readingNum == True:
-        if cmd == "[":
-            readingNum = False
-            readingIf = True
-
-        else:
-            if isinstance(cmd, str):
-                isChar = True
-
-            elif cmd.isdigit():
-                cmd = int(cmd)
-                
-            num.append(cmd)
-
-    elif readingIf == True:
-        if cmd == "]":
-            readingIf = False
-            if isChar == True:
-                if [selected] == ''.join(num):
-                    read(code)
-                    code = []
-                    num = []
-                    isChar = False
-
-                else:
-                    return
-                
-            elif tape[selected] == int(''.join(num)):
-                read(code)
-                code = []
-                num = []
-
-            else:
-                return
-
-        else:
-            code.append(cmd)
     
     elif cmd == "+":
         tape[selected] += 1
@@ -296,6 +300,15 @@ def parse(cmd):
 
     elif cmd == "r":
         tape[selected] = codecs.encode(str(tape[selected]), 'rot_13')
+
+    elif cmd == "n":
+        tape[selected] = int(tape[selected])
+
+    elif cmd == "@":
+        readingFName = True
+
+    elif cmd == "=":
+        readingName = True
 
 while 1:
     read(prompt())
