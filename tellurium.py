@@ -10,10 +10,13 @@ readingRand2 = False
 readingFName = False
 readingFCode = False
 readingName = False
+appendToFront = False
+appendToBack = False
 loopInf = False
 loopRand = False
 string = False
 isChar = False
+tempText = []
 tempName = []
 fName = []
 fCode = []
@@ -51,11 +54,14 @@ def parse(cmd):
     global readingFName
     global readingFCode
     global readingName
+    global appendToFront
+    global appendToBack
     global loopInf
     global loopRand
     global string
     global isChar
     global tempName
+    global tempText
     global fName
     global fCode
     global text
@@ -110,16 +116,40 @@ def parse(cmd):
             rand2.append(cmd)
 
     elif string == True:
-        if cmd == "r":
+        if appendToFront == True:
+            if cmd == "~":
+                tape[selected] = str(tape[selected]) + ''.join(tempText)
+                tempText = []
+                appendToFront = False
+
+            else:
+                tempText.append(cmd)
+
+        elif appendToBack == True:
+            if cmd == "~":
+                tape[selected] = ''.join(tempText) + str(tape[selected])
+                tempText = []
+                appendToBack = False
+
+            else:
+                tempText.append(cmd)
+                
+        elif cmd == "r":
             tape[selected] = tape[selected].reverse()
 
-        if cmd == "u":
+        elif cmd == "u":
             tape[selected] = tape[selected].upper()
 
-        if cmd == "l":
-            tape[slected] = tape[selected].lower()
+        elif cmd == "l":
+            tape[selected] = tape[selected].lower()
 
-        if cmd == ".":
+        elif cmd == "a":
+            appendToFront = True
+
+        elif cmd == "b":
+            appendToBack = True
+
+        elif cmd == ".":
             string = False
 
     elif readingLoopAmount == True:
