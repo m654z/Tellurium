@@ -2,6 +2,7 @@ import string, sys, random, time, codecs
 
 tape = [0] * 25500
 funcs = {}
+variables = {}
 readingStr = False
 readingLoopAmount = False
 readingLoopCode = False
@@ -10,12 +11,20 @@ readingRand2 = False
 readingFName = False
 readingFCode = False
 readingName = False
+readingVName = False
+readingFileName = False
+readingVText = False
+readingVName2 = False
 appendToFront = False
 appendToBack = False
 loopInf = False
 loopRand = False
 string = False
 isChar = False
+fileName = []
+vName = []
+vText = []
+vName2 = []
 tempText = []
 tempName = []
 fName = []
@@ -44,9 +53,12 @@ def read(cmd):
         parse(tokens[i])
 
 def parse(cmd):
+    # Sorry for all these globals...
     global tape
     global funcs
+    global variables
     global readingStr
+    global readingFileName
     global readingLoopAmount
     global readingLoopCode
     global readingRand
@@ -54,10 +66,15 @@ def parse(cmd):
     global readingFName
     global readingFCode
     global readingName
+    global readingVName
+    global readingVText
+    global readingVName2
     global appendToFront
     global appendToBack
     global loopInf
     global loopRand
+    global vName, vText, vName2
+    global fileName
     global string
     global isChar
     global tempName
@@ -71,7 +88,49 @@ def parse(cmd):
     global loopAmount
     global selected
 
-    if readingName == True:
+    if readingFileName == True:
+        if cmd == "]":
+            readingFileName = False
+            f = open(''.join(fileName), 'r')
+            code = f.read()
+            f.close()
+            read(code)
+            fileName = []
+
+        else:
+            fileName.append(cmd)
+
+
+    elif readingVName2 == True:
+        if cmd == ".":
+            readingVName2 = False
+            tape[selected] = variables[''.join(vName2)]
+            vName2 = []
+
+        else:
+            vName2.append(cmd)
+
+    elif readingVName == True:
+        if cmd == "|":
+            readingVText = True
+            readingVName = False
+
+        else:
+            vName.append(cmd)
+
+    elif readingVText == True:
+        if cmd == "]":
+            readingVText = False
+            name = ''.join(vName)
+            val = ''.join(vText)
+            variables[name] = val
+            vName = []
+            vText = []
+
+        else:
+            vText.append(cmd)
+
+    elif readingName == True:
         if cmd == ".":
             readingName = False
             name = ''.join(tempName)
@@ -122,6 +181,11 @@ def parse(cmd):
                 tempText = []
                 appendToFront = False
 
+            elif cmd == "$":
+                tape[selected] = str(tape[selected]) + str(tape[selected-1])
+                appendToFront = False
+                tempText = []
+
             else:
                 tempText.append(cmd)
 
@@ -130,6 +194,11 @@ def parse(cmd):
                 tape[selected] = ''.join(tempText) + str(tape[selected])
                 tempText = []
                 appendToBack = False
+
+            elif cmd == "$":
+                tape[selected] = str(tape[selected-1]) + str(tape[selected])
+                appendToFront = False
+                tempText = []
 
             else:
                 tempText.append(cmd)
@@ -339,6 +408,18 @@ def parse(cmd):
 
     elif cmd == "=":
         readingName = True
+
+    elif cmd == "¤":
+        readingVName = True
+
+    elif cmd == ";":
+        readingVName2 = True
+
+    elif cmd == "0":
+        readingFileName = True
+
+    elif cmd == "f":
+        tape[selected] = float(tape[selected])
 
 while 1:
     read(prompt())
