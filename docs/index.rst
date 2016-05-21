@@ -7,7 +7,7 @@ Welcome to Tellurium's documentation!
 =====================================
 
 Tellurium is an esoteric programming language written in Python.
-Tellurium is designed for code-golf, so it tries to keep the code short, but clean.
+This is Tellurium's tutorial/documentation.
 
 
 Contents:
@@ -15,8 +15,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-	Getting started
-	Simple programs
+	getting-started
+	programs
 	
 
 
@@ -24,6 +24,6 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`getting-started`
+* :ref:`modindex`
 * :ref:`search`
 
