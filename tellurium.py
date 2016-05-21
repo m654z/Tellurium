@@ -76,6 +76,9 @@ def read(cmd):
     if isinstance(cmd, str):
         cmd = cmd.replace("!K", "1000")
         cmd = cmd.replace("!H", "100")
+        cmd = cmd.replace("!a", "abcdefghijklmnopqrstuvwxyz")
+        cmd = cmd.replace("!A", "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        cmd = cmd.replace("!D", "1234567890")
         cmd = cmd.replace("´", "\n")
 
     for token in cmd:
