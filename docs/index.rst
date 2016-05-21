@@ -13,7 +13,7 @@ This is Tellurium's tutorial/documentation.
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    getting-started
    programs
