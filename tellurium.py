@@ -59,6 +59,9 @@ loopInf = False
 loopRand = False
 string = False
 isChar = False
+vName = []
+vName2 = []
+vText = []
 fileName = []
 tempText = []
 tempName = []
@@ -115,19 +118,6 @@ def _parse(cmd):
     global loopCode
     global loopAmount
     global selected
-
-    if readingSkip == True:
-        if cmd == "}":
-            readingSkip = False
-            if tape[selected] == 0:
-                return
-
-            elif tape[selected] != 0:
-                read(code)
-                code = []
-
-        else:
-            code.append(cmd)
 
     if readingFName == True:
         if cmd == "|":
@@ -346,9 +336,6 @@ def _parse(cmd):
     elif cmd == "0":
         parser_stack.append(read_filename)
 
-    elif cmd == "{":
-        readingSkip = True
-
 
 parser_stack = [_parse]
 
@@ -378,6 +365,7 @@ def read_vtext(cmd):
 
 
 def read_vname(cmd):
+    global vName
     if cmd == "|":
         parser_stack.pop()
         parser_stack.append(read_vtext)
