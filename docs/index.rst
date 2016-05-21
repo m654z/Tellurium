@@ -18,6 +18,7 @@ Contents:
    getting-started
    programs
    spec-vars
+   spec-math
 	
 
 
