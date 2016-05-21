@@ -1,4 +1,46 @@
-import string, sys, random, time, codecs
+import string
+import sys
+import random
+import time
+import codecs
+import functools
+import operator
+
+INT_BINOPS = {
+    "a": operator.add,
+    "s": operator.sub,
+    "m": operator.mul,
+    "d": operator.truediv,
+}
+
+INPLACE_UNARYOPS = {
+    "+": functools.partial(operator.add, 1),
+    "-": functools.partial(operator.add, -1),
+    "/": functools.partial(operator.add, 10),
+    "\\": functools.partial(operator.add, -10),
+    '"': functools.partial(operator.add, 100),
+    "'": functools.partial(operator.add, -100),
+    "n": int,
+    "f": float,
+    "%": ord,
+    "r": lambda v: codecs.encode(str(v), 'rot_13'),
+}
+
+FUNCS = {
+    "t": lambda: str(time.ctime()),
+    "#": lambda: 0,
+    "i": lambda: input(">> "),
+}
+
+POSITION_ACTIONS = {
+    "$": lambda _: 0,
+    ">": functools.partial(operator.add, 1),
+    "<": functools.partial(operator.add, -1),
+    "{": functools.partial(operator.add, 10),
+    "}": functools.partial(operator.add, -10),
+    "-": functools.partial(operator.add, 100),
+    "_": functools.partial(operator.add, -100),
+}
 
 tape = [0] * 25500
 funcs = {}
@@ -10,11 +52,6 @@ readingRand = False
 readingRand2 = False
 readingFName = False
 readingFCode = False
-readingName = False
-readingVName = False
-readingFileName = False
-readingVText = False
-readingVName2 = False
 appendToFront = False
 appendToBack = False
 loopInf = False
@@ -22,9 +59,6 @@ loopRand = False
 string = False
 isChar = False
 fileName = []
-vName = []
-vText = []
-vName2 = []
 tempText = []
 tempName = []
 fName = []
@@ -36,44 +70,31 @@ loopCode = []
 loopAmount = []
 selected = 0
 
-def prompt():
-    cmd = input("> ")
-    return cmd
-
 def read(cmd):
-    if "!K" in cmd:
+    if isinstance(cmd, str):
         cmd = cmd.replace("!K", "1000")
-
-    if "!H" in cmd:
         cmd = cmd.replace("!H", "100")
-        
-    commands = len(cmd)
-    tokens = list(cmd)
-    for i in range(0, commands):
-        parse(tokens[i])
 
-def parse(cmd):
+    for token in cmd:
+        parse(token)
+
+def _parse(cmd):
     # Sorry for all these globals...
     global tape
     global funcs
     global variables
     global readingStr
-    global readingFileName
     global readingLoopAmount
     global readingLoopCode
     global readingRand
     global readingRand2
     global readingFName
     global readingFCode
-    global readingName
-    global readingVName
-    global readingVText
-    global readingVName2
     global appendToFront
     global appendToBack
     global loopInf
     global loopRand
-    global vName, vText, vName2
+    global vName, vText
     global fileName
     global string
     global isChar
@@ -88,59 +109,7 @@ def parse(cmd):
     global loopAmount
     global selected
 
-    if readingFileName == True:
-        if cmd == "]":
-            readingFileName = False
-            f = open(''.join(fileName), 'r')
-            code = f.read()
-            f.close()
-            read(code)
-            fileName = []
-
-        else:
-            fileName.append(cmd)
-
-
-    elif readingVName2 == True:
-        if cmd == ".":
-            readingVName2 = False
-            tape[selected] = variables[''.join(vName2)]
-            vName2 = []
-
-        else:
-            vName2.append(cmd)
-
-    elif readingVName == True:
-        if cmd == "|":
-            readingVText = True
-            readingVName = False
-
-        else:
-            vName.append(cmd)
-
-    elif readingVText == True:
-        if cmd == "]":
-            readingVText = False
-            name = ''.join(vName)
-            val = ''.join(vText)
-            variables[name] = val
-            vName = []
-            vText = []
-
-        else:
-            vText.append(cmd)
-
-    elif readingName == True:
-        if cmd == ".":
-            readingName = False
-            name = ''.join(tempName)
-            read(funcs[name])
-            tempName = []
-
-        else:
-            tempName.append(cmd)
-
-    elif readingFName == True:
+    if readingFName == True:
         if cmd == "|":
             readingFName = False
             readingFCode = True
@@ -202,7 +171,7 @@ def parse(cmd):
 
             else:
                 tempText.append(cmd)
-                
+
         elif cmd == "r":
             tape[selected] = tape[selected].reverse()
 
@@ -259,7 +228,7 @@ def parse(cmd):
                     else:
                         for i in range(0, random.randint(int(''.join(rand2)), int(''.join(rand)))):
                             read(loopCode)
-                
+
             else:
                 for i in range(0, int(''.join(loopAmount))):
                     read(loopCode)
@@ -279,18 +248,6 @@ def parse(cmd):
 
         else:
             text.append(cmd)
-    
-    elif cmd == "+":
-        tape[selected] += 1
-
-    elif cmd == "-":
-        tape[selected] -= 1
-
-    elif cmd == ">":
-        selected += 1
-
-    elif cmd == "<":
-        selected -= 1
 
     elif cmd == "*":
         print(selected)
@@ -304,56 +261,19 @@ def parse(cmd):
         else:
             print(chr(tape[selected]))
 
-    elif cmd == "%":
-        tape[selected] = ord(tape[selected])
+    elif cmd in FUNCS:
+        tape[selected] = FUNCS[cmd]()
 
-    elif cmd == "#":
-        tape[selected] = 0
+    elif cmd in INPLACE_UNARYOPS:
+        op = INPLACE_UNARYOPS[cmd]
+        tape[selected] = op(tape[selected])
 
-    elif cmd == "$":
-        selected = 0
+    elif cmd in INT_BINOPS:
+        op = INT_BINOPS[cmd]
+        tape[selected] = op(int(tape[selected]), int(tape[selected + 1]))
 
-    elif cmd == "/":
-        tape[selected] += 10
-
-    elif cmd == "\\":
-        tape[selected] -= 10
-
-    elif cmd == "{":
-        selected += 10
-
-    elif cmd == "}":
-        selected -= 10
-
-    elif cmd == '"':
-        tape[selected] += 100
-
-    elif cmd == "'":
-        tape[selected] -= 100
-
-    elif cmd == "-":
-        selected += 100
-
-    elif cmd == "_":
-        selected -= 100
-
-    elif cmd == "i":
-        tape[selected] = input(">> ")
-
-    elif cmd == "n":
-        tape[selected] = int(tape[selected])
-
-    elif cmd == "a":
-        tape[selected] = int(tape[selected]) + int(tape[selected+1])
-
-    elif cmd == "s":
-        tape[selected] = int(tape[selected]) - int(tape[selected+1])
-
-    elif cmd == "m":
-        tape[selected] = int(tape[selected]) * int(tape[selected+1])
-
-    elif cmd == "d":
-        tape[selected] = int(tape[selected]) / int(tape[selected+1])
+    elif cmd in POSITION_ACTIONS:
+        selected = POSITION_ACTIONS[cmd](selected)
 
     elif cmd == "(":
         readingNum = True
@@ -382,44 +302,93 @@ def parse(cmd):
     elif cmd == "→":
         if rand != []:
             rand = []
-            
+
         readingRand = True
 
     elif cmd == "←":
         if rand2 != []:
             rand2 = []
-            
-        readingRand2 = True
 
-    elif cmd == "t":
-        tape[selected] = str(time.ctime())
+        readingRand2 = True
 
     elif cmd == "¨":
         time.sleep(1)
-
-    elif cmd == "r":
-        tape[selected] = codecs.encode(str(tape[selected]), 'rot_13')
-
-    elif cmd == "n":
-        tape[selected] = int(tape[selected])
 
     elif cmd == "@":
         readingFName = True
 
     elif cmd == "=":
-        readingName = True
-
+        parser_stack.append(read_name)
     elif cmd == "¤":
-        readingVName = True
-
+        parser_stack.append(read_vname)
     elif cmd == ";":
-        readingVName2 = True
-
+        parser_stack.append(read_vname2)
     elif cmd == "0":
-        readingFileName = True
+        parser_stack.append(read_filename)
 
-    elif cmd == "f":
-        tape[selected] = float(tape[selected])
+
+parser_stack = [_parse]
+
+
+def read_name(cmd):
+    global tempName
+    if cmd == ".":
+        parser_stack.pop()
+        name = ''.join(tempName)
+        read(funcs[name])
+        tempName = []
+    else:
+        tempName.append(cmd)
+
+
+def read_vtext(cmd):
+    global vName, vText
+    if cmd == "]":
+        parser_stack.pop()
+        name = ''.join(vName)
+        val = ''.join(vText)
+        variables[name] = val
+        vName = []
+        vText = []
+    else:
+        vText.append(cmd)
+
+
+def read_vname(cmd):
+    if cmd == "|":
+        parser_stack.pop()
+        parser_stack.append(read_vtext)
+    else:
+        vName.append(cmd)
+
+
+def read_vname2(cmd):
+    global vName2
+    if cmd == ".":
+        parser_stack.pop()
+        tape[selected] = variables[''.join(vName2)]
+        vName2 = []
+
+    else:
+        vName2.append(cmd)
+
+
+
+def read_filename(cmd):
+    global fileName
+    if cmd == "]":
+        parser_stack.pop()
+        f = open(''.join(fileName), 'r')
+        code = f.read()
+        f.close()
+        read(code)
+        fileName = []
+
+    else:
+        fileName.append(cmd)
+
+def parse(token):
+    return parser_stack[-1](token)
 
 while 1:
-    read(prompt())
+    read(input("> "))
