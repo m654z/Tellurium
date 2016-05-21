@@ -36,15 +36,16 @@ POSITION_ACTIONS = {
     "$": lambda _: 0,
     ">": functools.partial(operator.add, 1),
     "<": functools.partial(operator.add, -1),
-    "{": functools.partial(operator.add, 10),
-    "}": functools.partial(operator.add, -10),
-    "-": functools.partial(operator.add, 100),
-    "_": functools.partial(operator.add, -100),
+    "e": functools.partial(operator.add, 10),
+    "E": functools.partial(operator.add, -10),
+    "h": functools.partial(operator.add, 100),
+    "H": functools.partial(operator.add, -100),
 }
 
 tape = [0] * 25500
 funcs = {}
 variables = {}
+readingSkip = False
 readingStr = False
 readingLoopAmount = False
 readingLoopCode = False
@@ -66,6 +67,7 @@ fCode = []
 text = []
 rand = []
 rand2 = []
+code = []
 loopCode = []
 loopAmount = []
 selected = 0
@@ -74,16 +76,17 @@ def read(cmd):
     if isinstance(cmd, str):
         cmd = cmd.replace("!K", "1000")
         cmd = cmd.replace("!H", "100")
+        cmd = cmd.replace("´", "\n")
 
     for token in cmd:
         parse(token)
 
 def _parse(cmd):
-    # Sorry for all these globals...
     global tape
     global funcs
     global variables
     global readingStr
+    global readingSkip
     global readingLoopAmount
     global readingLoopCode
     global readingRand
@@ -105,9 +108,23 @@ def _parse(cmd):
     global text
     global rand
     global rand2
+    global code
     global loopCode
     global loopAmount
     global selected
+
+    if readingSkip == True:
+        if cmd == "}":
+            readingSkip = False
+            if tape[selected] == 0:
+                return
+
+            elif tape[selected] != 0:
+                read(code)
+                code = []
+
+        else:
+            code.append(cmd)
 
     if readingFName == True:
         if cmd == "|":
@@ -325,6 +342,9 @@ def _parse(cmd):
         parser_stack.append(read_vname2)
     elif cmd == "0":
         parser_stack.append(read_filename)
+
+    elif cmd == "{":
+        readingSkip = True
 
 
 parser_stack = [_parse]
