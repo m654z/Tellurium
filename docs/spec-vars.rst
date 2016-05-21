@@ -1,4 +1,5 @@
 3. Language Specs - Builtin Variables
+*************************************
 
 To keep the code short, Tellurium has some builtin variables that when used, expand to useful values such as 100 and 1000.
 
