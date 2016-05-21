@@ -1,7 +1,7 @@
 1. Getting started with Tellurium
 *********************************
 
-Tellurium, named after the element of the same name, is an esoteric programming language created by `m654 <http://m654z.github.io>`. Tellurium is designed to be a code-golfing language.
+Tellurium, named after the element of the same name, is an esoteric programming language created by `m654 <http://m654z.github.io>`_. Tellurium is designed to be a code-golfing language.
 so it tries to keep the code short. Because of all the one-character commands, Tellurium code might seem unreadable, but it is in fact quite easy to learn, once you can memorize what all
 of the commands to.
 Tellurium is a tape-based language, meaning that it uses a tape to store data in. Tellurium's tape has 25500 cells.
