@@ -15,8 +15,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-	getting-started
-	programs
+   getting-started
+   programs
 	
 
 
