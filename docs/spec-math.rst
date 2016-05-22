@@ -60,13 +60,25 @@ Example: ``µ5.5~fc^`` outputs 6.
 ``g`` calculates the floor of the cell's value.
 Example: ``µ7.2~fg^`` outputs 7.
 
-4.10 - "n" Integer
+4.10 - "F" Fibonacci
+====================
+
+``F`` calculates the nth Fibonacci number (n is the cell's value) and stores it in the next cell.
+Example: ``++++++F>^`` outputs 8.
+
+4.11 - "I" Integer Input
+========================
+
+``I`` gets input and converts it to an integer.
+Example: ``IT`` outputs "Integer".
+
+4.12 - "n" Integer
 ==================
 
 ``n`` converts the selected cell's value to an integer.
 Example: ``in`` gets input and converts it to an integer.
 
-4.11 - "f" Float
+4.13 - "f" Float
 ================
 
 ``f`` converts the selected cell's value to a float. Useful for doing math with numbers that have decimals.
