@@ -119,12 +119,11 @@ def _parse(cmd):
     global rand
     global rand2
     global code
-    global toBeRemoved
     global loopCode
     global loopAmount
     global selected
 
-    if readingFName == True:
+    elif readingFName == True:
         if cmd == "|":
             readingFName = False
             readingFCode = True
