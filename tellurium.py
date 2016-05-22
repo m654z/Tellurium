@@ -5,6 +5,7 @@ import time
 import codecs
 import functools
 import operator
+import math
 
 INT_BINOPS = {
     "a": operator.add,
@@ -12,7 +13,7 @@ INT_BINOPS = {
     "m": operator.mul,
     "d": operator.truediv,
 }
-
+    
 INPLACE_UNARYOPS = {
     "+": functools.partial(operator.add, 1),
     "-": functools.partial(operator.add, -1),
@@ -222,6 +223,7 @@ def _parse(cmd):
     elif readingLoopCode == True:
         if cmd == "]":
             readingLoopCode = False
+            
             if loopInf == True:
                 while 1:
                     read(loopCode)
@@ -254,9 +256,6 @@ def _parse(cmd):
 
             loopCode = []
             loopAmount = []
-
-        else:
-            loopCode.append(cmd)
 
     elif readingStr == True:
         if cmd == "~":
@@ -293,6 +292,21 @@ def _parse(cmd):
 
     elif cmd in POSITION_ACTIONS:
         selected = POSITION_ACTIONS[cmd](selected)
+
+    elif cmd == "½":
+        tape[selected] = math.exp(tape[selected])
+
+    elif cmd == "§":
+        tape[selected] = math.factorial(tape[selected])
+
+    elif cmd == "q":
+        tape[selected] = math.sqrt(tape[selected])
+
+    elif cmd == "c":
+        tape[selected] = math.ceil(tape[selected])
+
+    elif cmd == "g":
+        tape[selected] = math.floor(tape[selected])
 
     elif cmd == "(":
         readingNum = True
@@ -344,6 +358,12 @@ def _parse(cmd):
         parser_stack.append(read_vname2)
     elif cmd == "0":
         parser_stack.append(read_filename)
+
+    elif cmd == "I":
+        tape[selected] = int(input(">> "))
+
+    elif cmd == "F":
+        tape[selected+1] = fib(tape[selected])
 
 
 parser_stack = [_parse]
@@ -406,6 +426,13 @@ def read_filename(cmd):
 
     else:
         fileName.append(cmd)
+
+def fib(n):
+    a, b = 1, 1
+    for i in range(n-1):
+        a, b = b, a+b
+
+    return a
 
 def parse(token):
     return parser_stack[-1](token)
