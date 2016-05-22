@@ -58,6 +58,7 @@ appendToBack = False
 loopInf = False
 loopRand = False
 loopInp = False
+loopLen = False
 string = False
 isChar = False
 vName = []
@@ -104,6 +105,7 @@ def _parse(cmd):
     global loopInf
     global loopRand
     global loopInp
+    global loopLen
     global vName, vText
     global fileName
     global string
@@ -200,6 +202,12 @@ def _parse(cmd):
         elif cmd == "b":
             appendToBack = True
 
+        elif cmd == "t":
+            tape[selected] = str.title(tape[selected])
+
+        elif cmd == "c":
+            tape[selected] = str.capitalize(tape[selected])
+
         elif cmd == ".":
             string = False
 
@@ -216,6 +224,9 @@ def _parse(cmd):
 
         elif cmd == "I":
             loopInp = True
+
+        elif cmd == "l":
+            loopLen = True
 
         else:
             loopAmount.append(cmd)
@@ -248,6 +259,10 @@ def _parse(cmd):
 
             elif loopInp == True:
                 for i in range(0, int(input((">> ")))):
+                    read(loopCode)
+
+            elif loopLen == True:
+                for i in range(0, len(tape[selected])):
                     read(loopCode)
 
             else:
