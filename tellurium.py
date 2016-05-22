@@ -45,7 +45,6 @@ POSITION_ACTIONS = {
 tape = [0] * 25500
 funcs = {}
 variables = {}
-readingSkip = False
 readingStr = False
 readingLoopAmount = False
 readingLoopCode = False
@@ -57,6 +56,7 @@ appendToFront = False
 appendToBack = False
 loopInf = False
 loopRand = False
+loopInp = False
 string = False
 isChar = False
 vName = []
@@ -92,7 +92,6 @@ def _parse(cmd):
     global funcs
     global variables
     global readingStr
-    global readingSkip
     global readingLoopAmount
     global readingLoopCode
     global readingRand
@@ -103,10 +102,12 @@ def _parse(cmd):
     global appendToBack
     global loopInf
     global loopRand
+    global loopInp
     global vName, vText
     global fileName
     global string
     global isChar
+    global removing
     global tempName
     global tempText
     global fName
@@ -115,6 +116,7 @@ def _parse(cmd):
     global rand
     global rand2
     global code
+    global toBeRemoved
     global loopCode
     global loopAmount
     global selected
@@ -211,6 +213,9 @@ def _parse(cmd):
         elif cmd == "r":
             loopRand = True
 
+        elif cmd == "I":
+            loopInp = True
+
         else:
             loopAmount.append(cmd)
 
@@ -221,7 +226,7 @@ def _parse(cmd):
                 while 1:
                     read(loopCode)
 
-            if loopRand == True:
+            elif loopRand == True:
                 if rand and rand2 == []:
                     for i in range(0, random.randint(0, 100)):
                         read(loopCode)
@@ -238,6 +243,10 @@ def _parse(cmd):
                     else:
                         for i in range(0, random.randint(int(''.join(rand2)), int(''.join(rand)))):
                             read(loopCode)
+
+            elif loopInp == True:
+                for i in range(0, int(input((">> ")))):
+                    read(loopCode)
 
             else:
                 for i in range(0, int(''.join(loopAmount))):
