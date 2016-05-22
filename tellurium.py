@@ -365,6 +365,19 @@ def _parse(cmd):
     elif cmd == "F":
         tape[selected+1] = fib(tape[selected])
 
+    elif cmd == "T":
+        if str(type(tape[selected])) == "<class 'str'>":
+            print("String")
+
+        elif str(type(tape[selected])) == "<class 'int'>":
+            print("Integer")
+
+        elif str(type(tape[selected])) == "<class 'float'>":
+            print("Float")
+
+        else:
+            print("Other")
+
 
 parser_stack = [_parse]
 
