@@ -60,14 +60,14 @@ Example: ``µ5.5~fc^`` outputs 6.
 ``g`` calculates the floor of the cell's value.
 Example: ``µ7.2~fg^`` outputs 7.
 
-4.10 - "n"
-=========
+4.10 - "n" Integer
+==================
 
 ``n`` converts the selected cell's value to an integer.
 Example: ``in`` gets input and converts it to an integer.
 
-4.11 - "f":
-==========
+4.11 - "f" Float
+================
 
 ``f`` converts the selected cell's value to a float. Useful for doing math with numbers that have decimals.
 Example: ``in`` gets input and converts it to a float.
