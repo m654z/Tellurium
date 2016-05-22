@@ -19,6 +19,7 @@ Contents:
    programs
    spec-vars
    spec-math
+   spec-string
 	
 
 
