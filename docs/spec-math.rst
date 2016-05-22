@@ -55,6 +55,7 @@ Example: ``µ5~nq^`` outputs 2.23606797749979.
 Example: ``µ5.5~fc^`` outputs 6.
 
 4.9 - "g" Floor
+===============
 
 ``g`` calculates the floor of the cell's value.
 Example: ``µ7.2~fg^`` outputs 7.
