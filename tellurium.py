@@ -192,6 +192,9 @@ def _parse(cmd):
             loopCode = []
             loopAmount = []
 
+        else:
+            loopCode.append(cmd)
+
     elif readingIf == True:
         if cmd == ".":
             readingIf = False
