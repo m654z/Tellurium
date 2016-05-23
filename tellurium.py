@@ -49,6 +49,7 @@ variables = {}
 readingStr = False
 readingLoopAmount = False
 readingLoopCode = False
+readingIfCode = False
 readingRand = False
 readingRand2 = False
 readingFName = False
@@ -79,6 +80,7 @@ loopCode = []
 loopAmount = []
 readCode = []
 ifThis = []
+ifCode = []
 selected = 0
 
 def read(cmd):
@@ -106,6 +108,7 @@ def _parse(cmd):
     global readingFCode
     global readingCode
     global readingIf
+    global readingIfCode
     global appendToFront
     global appendToBack
     global loopInf
@@ -129,6 +132,7 @@ def _parse(cmd):
     global loopAmount
     global readCode
     global ifThis
+    global ifCode
     global selected
 
     if readingLoopAmount == True:
@@ -196,21 +200,28 @@ def _parse(cmd):
             loopCode.append(cmd)
 
     elif readingIf == True:
-        if cmd == ".":
+        if cmd == "|":
             readingIf = False
+            readingIfCode = True
+
+        else:
+            ifThis.append(cmd)
+
+    elif readingIfCode == True:
+        if cmd == "]":
+            readingIfCode = False
             ifThis = ''.join(ifThis)
             if ifThis.isdigit():
                 ifThis = int(ifThis)
 
             if tape[selected] == ifThis:
-                read(tape[selected+1])
-                ifThis = []
+                read(''.join(ifCode))
 
-            else:
-                ifThis = []
+            ifCode = []
+            ifThis = []
 
         else:
-            ifThis.append(cmd)
+            ifCode.append(cmd)
 
     elif readingCode == True:
         if cmd == "€":
