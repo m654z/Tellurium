@@ -53,8 +53,10 @@ readingRand = False
 readingRand2 = False
 readingFName = False
 readingFCode = False
+readingCode = False
 appendToFront = False
 appendToBack = False
+readingIf = False
 loopInf = False
 loopRand = False
 loopInp = False
@@ -75,6 +77,8 @@ rand2 = []
 code = []
 loopCode = []
 loopAmount = []
+readCode = []
+ifThis = []
 selected = 0
 
 def read(cmd):
@@ -100,6 +104,8 @@ def _parse(cmd):
     global readingRand2
     global readingFName
     global readingFCode
+    global readingCode
+    global readingIf
     global appendToFront
     global appendToBack
     global loopInf
@@ -121,7 +127,96 @@ def _parse(cmd):
     global code
     global loopCode
     global loopAmount
+    global readCode
+    global ifThis
     global selected
+
+    if readingLoopAmount == True:
+        if cmd == "|":
+            readingLoopAmount = False
+            readingLoopCode = True
+
+        elif cmd == "i":
+            loopInf = True
+
+        elif cmd == "r":
+            loopRand = True
+
+        elif cmd == "I":
+            loopInp = True
+
+        elif cmd == "l":
+            loopLen = True
+
+        else:
+            loopAmount.append(cmd)
+
+    elif readingLoopCode == True:
+        if cmd == "]":
+            readingLoopCode = False
+            
+            if loopInf == True:
+                while 1:
+                    read(loopCode)
+
+            elif loopRand == True:
+                if rand and rand2 == []:
+                    for i in range(0, random.randint(0, 100)):
+                        read(loopCode)
+
+                else:
+                    if rand2 == []:
+                        for i in range(0, random.randint(0, int(''.join(rand)))):
+                            read(loopCode)
+
+                    elif rand == []:
+                        for i in range(0, random.randint(int(''.join(rand2)), 100)):
+                            read(loopCode)
+
+                    else:
+                        for i in range(0, random.randint(int(''.join(rand2)), int(''.join(rand)))):
+                            read(loopCode)
+
+            elif loopInp == True:
+                for i in range(0, int(input((">> ")))):
+                    read(loopCode)
+
+            elif loopLen == True:
+                for i in range(0, len(tape[selected])):
+                    read(loopCode)
+
+            else:
+                for i in range(0, int(''.join(loopAmount))):
+                    read(loopCode)
+
+            loopCode = []
+            loopAmount = []
+
+    elif readingIf == True:
+        if cmd == ".":
+            readingIf = False
+            ifThis = ''.join(ifThis)
+            if ifThis.isdigit():
+                ifThis = int(ifThis)
+
+            if tape[selected] == ifThis:
+                read(tape[selected+1])
+                ifThis = []
+
+            else:
+                ifThis = []
+
+        else:
+            ifThis.append(cmd)
+
+    elif readingCode == True:
+        if cmd == "€":
+            readingCode = False
+            tape[selected+1] = ''.join(readCode)
+            readCode = []
+
+        else:
+            readCode.append(cmd)
 
     elif readingFName == True:
         if cmd == "|":
@@ -209,67 +304,6 @@ def _parse(cmd):
 
         elif cmd == ".":
             string = False
-
-    elif readingLoopAmount == True:
-        if cmd == "|":
-            readingLoopAmount = False
-            readingLoopCode = True
-
-        elif cmd == "i":
-            loopInf = True
-
-        elif cmd == "r":
-            loopRand = True
-
-        elif cmd == "I":
-            loopInp = True
-
-        elif cmd == "l":
-            loopLen = True
-
-        else:
-            loopAmount.append(cmd)
-
-    elif readingLoopCode == True:
-        if cmd == "]":
-            readingLoopCode = False
-            
-            if loopInf == True:
-                while 1:
-                    read(loopCode)
-
-            elif loopRand == True:
-                if rand and rand2 == []:
-                    for i in range(0, random.randint(0, 100)):
-                        read(loopCode)
-
-                else:
-                    if rand2 == []:
-                        for i in range(0, random.randint(0, int(''.join(rand)))):
-                            read(loopCode)
-
-                    elif rand == []:
-                        for i in range(0, random.randint(int(''.join(rand2)), 100)):
-                            read(loopCode)
-
-                    else:
-                        for i in range(0, random.randint(int(''.join(rand2)), int(''.join(rand)))):
-                            read(loopCode)
-
-            elif loopInp == True:
-                for i in range(0, int(input((">> ")))):
-                    read(loopCode)
-
-            elif loopLen == True:
-                for i in range(0, len(tape[selected])):
-                    read(loopCode)
-
-            else:
-                for i in range(0, int(''.join(loopAmount))):
-                    read(loopCode)
-
-            loopCode = []
-            loopAmount = []
 
     elif readingStr == True:
         if cmd == "~":
@@ -391,6 +425,12 @@ def _parse(cmd):
 
         else:
             print("Other")
+
+    elif cmd == "£":
+        readingCode = True
+
+    elif cmd == "?":
+        readingIf = True
 
 
 parser_stack = [_parse]
