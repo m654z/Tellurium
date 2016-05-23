@@ -64,6 +64,9 @@ loopInp = False
 loopLen = False
 string = False
 isChar = False
+ifInt = False
+ifStr = False
+ifFloat = False
 vName = []
 vName2 = []
 vText = []
@@ -119,6 +122,9 @@ def _parse(cmd):
     global fileName
     global string
     global isChar
+    global ifInt
+    global ifStr
+    global ifFloat
     global removing
     global tempName
     global tempText
@@ -210,11 +216,11 @@ def _parse(cmd):
     elif readingIfCode == True:
         if cmd == "]":
             readingIfCode = False
-            ifThis = ''.join(ifThis)
-            if ifThis.isdigit():
-                ifThis = int(ifThis)
+            ifT = ''.join(ifThis)
+            if ifT.isdigit():
+                ifT = int(ifT)
 
-            if tape[selected] == ifThis:
+            if tape[selected] == ifT:
                 read(''.join(ifCode))
 
             ifCode = []
@@ -445,7 +451,6 @@ def _parse(cmd):
 
     elif cmd == "?":
         readingIf = True
-
 
 parser_stack = [_parse]
 
