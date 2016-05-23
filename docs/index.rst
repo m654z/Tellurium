@@ -20,6 +20,7 @@ Contents:
    spec-vars
    spec-math
    spec-string
+   spec-conditionals
 	
 
 
