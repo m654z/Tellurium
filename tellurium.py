@@ -376,6 +376,9 @@ def _parse(cmd):
     elif cmd == "g":
         tape[selected] = math.floor(tape[selected])
 
+    elif cmd == "S":
+        tape[selected] *= tape[selected]
+
     elif cmd == "(":
         readingNum = True
 
