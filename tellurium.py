@@ -54,7 +54,6 @@ readingRand = False
 readingRand2 = False
 readingFName = False
 readingFCode = False
-readingCode = False
 appendToFront = False
 appendToBack = False
 readingIf = False
@@ -81,7 +80,6 @@ rand2 = []
 code = []
 loopCode = []
 loopAmount = []
-readCode = []
 ifThis = []
 ifCode = []
 selected = 0
@@ -93,6 +91,8 @@ def read(cmd):
         cmd = cmd.replace("!a", "abcdefghijklmnopqrstuvwxyz")
         cmd = cmd.replace("!A", "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         cmd = cmd.replace("!D", "1234567890")
+        cmd = cmd.replace("!O", "Hello, world!")
+        cmd = cmd.replace("!o", "Hello, World!")
         cmd = cmd.replace("´", "\n")
 
     for token in cmd:
@@ -109,7 +109,6 @@ def _parse(cmd):
     global readingRand2
     global readingFName
     global readingFCode
-    global readingCode
     global readingIf
     global readingIfCode
     global appendToFront
@@ -133,7 +132,6 @@ def _parse(cmd):
     global text
     global rand
     global rand2
-    global code
     global loopCode
     global loopAmount
     global readCode
@@ -229,15 +227,6 @@ def _parse(cmd):
         else:
             ifCode.append(cmd)
 
-    elif readingCode == True:
-        if cmd == "€":
-            readingCode = False
-            tape[selected+1] = ''.join(readCode)
-            readCode = []
-
-        else:
-            readCode.append(cmd)
-
     elif readingFName == True:
         if cmd == "|":
             readingFName = False
@@ -302,7 +291,7 @@ def _parse(cmd):
                 tempText.append(cmd)
 
         elif cmd == "r":
-            tape[selected] = tape[selected].reverse()
+            tape[selected] = tape[selected][::-1]
 
         elif cmd == "u":
             tape[selected] = tape[selected].upper()
@@ -449,11 +438,14 @@ def _parse(cmd):
         else:
             print("Other")
 
-    elif cmd == "£":
-        readingCode = True
-
     elif cmd == "?":
         readingIf = True
+
+    elif cmd == "P":
+        print(isPrime(tape[selected]))
+
+    elif cmd == "E":
+        read(tape[selected])
 
 parser_stack = [_parse]
 
@@ -522,6 +514,9 @@ def fib(n):
         a, b = b, a+b
 
     return a
+
+def isPrime(n):
+    return all(n % i for i in range(2, n))
 
 def parse(token):
     return parser_stack[-1](token)
