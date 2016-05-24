@@ -466,6 +466,9 @@ def _parse(cmd):
     elif cmd == "E":
         read(tape[selected])
 
+    elif cmd == "L":
+        tape[selected] = len(str(tape[selected]))
+
 parser_stack = [_parse]
 
 
