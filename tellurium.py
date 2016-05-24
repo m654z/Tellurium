@@ -93,6 +93,9 @@ def read(cmd):
         cmd = cmd.replace("!D", "1234567890")
         cmd = cmd.replace("!O", "Hello, world!")
         cmd = cmd.replace("!o", "Hello, World!")
+        cmd = cmd.replace("!P", "3.14159265359")
+        cmd = cmd.replace("!E", "2.71828182846")
+        cmd = cmd.replace("!I", "1.41421356237")
         cmd = cmd.replace("´", "\n")
 
     for token in cmd:
@@ -291,7 +294,11 @@ def _parse(cmd):
                 tempText.append(cmd)
 
         elif cmd == "r":
-            tape[selected] = tape[selected][::-1]
+            try:
+                tape[selected] = tape[selected][::-1]
+
+            except TypeError:
+                tape[selected] = str(tape[selected])[::-1]
 
         elif cmd == "u":
             tape[selected] = tape[selected].upper()
@@ -345,7 +352,11 @@ def _parse(cmd):
 
     elif cmd in INT_BINOPS:
         op = INT_BINOPS[cmd]
-        tape[selected] = op(int(tape[selected]), int(tape[selected + 1]))
+        try:
+            tape[selected] = op(int(tape[selected]), int(tape[selected + 1]))
+
+        except ZeroDivisionError:
+            print("ZeroDivisonError: can't divide by zero.")
 
     elif cmd in POSITION_ACTIONS:
         selected = POSITION_ACTIONS[cmd](selected)
@@ -354,10 +365,18 @@ def _parse(cmd):
         tape[selected] = math.exp(tape[selected])
 
     elif cmd == "§":
-        tape[selected] = math.factorial(tape[selected])
+        try:
+            tape[selected] = math.factorial(tape[selected])
+
+        except ValueError:
+            print("ValueError: can't calculate the factorial of " + str(tape[selected]) + ".")
 
     elif cmd == "q":
-        tape[selected] = math.sqrt(tape[selected])
+        try:
+            tape[selected] = math.sqrt(tape[selected])
+
+        except ValueError:
+            print("ValueError: can't calculate the square root of " + str(tape[selected]) + ".")
 
     elif cmd == "c":
         tape[selected] = math.ceil(tape[selected])
@@ -486,9 +505,13 @@ def read_vname(cmd):
 def read_vname2(cmd):
     global vName2
     if cmd == ".":
-        parser_stack.pop()
-        tape[selected] = variables[''.join(vName2)]
-        vName2 = []
+        try:
+            parser_stack.pop()
+            tape[selected] = variables[''.join(vName2)]
+            vName2 = []
+
+        except KeyError:
+            print("VariableError: No such variable named " + ''.join(vName2) + ".")
 
     else:
         vName2.append(cmd)
