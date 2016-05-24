@@ -42,3 +42,18 @@ The ´ variable works like a newline. (\n)
 Example:
 
 ``µHello´there~^`` displays "Hello\nthere".
+
+3.6 "!P" - Pi
+============
+
+The !P variable expands to aproximately pi (3.14159265359).
+
+3.7 "!E" - Euler's number
+=========================
+
+The !E variable expands to Euler's number, 2.71828182846.
+
+3.8 "!I" - Square root of 2
+===========================
+
+The !I variable expands to the square root of 2, 1.41421356237
