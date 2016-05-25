@@ -24,6 +24,7 @@ INPLACE_UNARYOPS = {
     "n": int,
     "f": float,
     "%": ord,
+    "£": chr,
     "r": lambda v: codecs.encode(str(v), 'rot_13'),
 }
 
