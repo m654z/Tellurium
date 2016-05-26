@@ -462,7 +462,7 @@ def _parse(cmd):
         readingIf = True
 
     elif cmd == "P":
-        print(isPrime(tape[selected]))
+        tape[selected+1] = isPrime(tape[selected])
 
     elif cmd == "E":
         read(tape[selected])
