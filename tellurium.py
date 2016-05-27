@@ -7,6 +7,7 @@ import functools
 import operator
 import math
 import statistics
+import re
 
 INT_BINOPS = {
     "a": operator.add,
@@ -71,6 +72,11 @@ ifStr = False
 ifFloat = False
 readingModeAmount = False
 readingRemove = False
+commandSet2 = False
+readingTimes = False
+readingCount = False
+readingLetter = False
+readingNumber = False
 vName = []
 vName2 = []
 vText = []
@@ -89,6 +95,10 @@ ifThis = []
 ifCode = []
 mode = []
 toRemove = []
+times = []
+count = []
+letter = []
+number = []
 selected = 0
 modeAmount = []
 currentReturned = 0
@@ -138,9 +148,13 @@ def _parse(cmd):
     global ifFloat
     global readingModeAmount
     global readingRemove
+    global readingTimes
+    global readingNumber
+    global commandSet2
     global removing
     global tempName
     global tempText
+    global readingLetter
     global fName
     global fCode
     global text
@@ -156,9 +170,74 @@ def _parse(cmd):
     global toRemove
     global selected
     global modeAmount
+    global number
+    global readingCount
+    global times
+    global count
+    global letter
     global currentReturned
 
-    if readingModeAmount == True:
+    if readingCount == True:
+        if cmd == ".":
+            readingCount = False
+            currentReturned = str(tape[selected]).count(''.join(count))
+            count = []
+
+        else:
+            count.append(cmd)
+
+    if commandSet2 == True:
+        if readingNumber == True:
+            if cmd == ".":
+                if str(type(tape[selected])) == "<class 'list'>":
+                    newNum = int(re.sub("[^0-9]", "", ''.join(number)))
+                    currentReturned = tape[selected][newNum]
+                    number = []
+                    commandSet2 = False
+
+                else:
+                    print("ListError: value is not a list.")
+
+            else:
+                number.append(cmd)
+
+        else:
+            number.append(cmd)
+        if readingLetter == True:
+            if cmd == ".":
+                tape[selected] = []
+                words = open('words.txt', 'r')
+                wordList = list(words)
+                wordList = map(lambda x: str.replace(x, "\n", ""), wordList)
+                for w in wordList:
+                    if w[0] == ''.join(letter):
+                        tape[selected].append(w)
+
+                commandSet2 = False
+
+            else:
+                letter.append(cmd)
+                
+        if readingTimes == True:
+            if cmd == ".":
+                readingTimes = False
+                commandSet2 = False
+                print(str(tape[selected])*int(''.join(times)))
+                times = []
+
+            else:
+                times.append(cmd)
+                
+        elif cmd == "m":
+            readingTimes = True
+
+        elif cmd == "w":
+            readingLetter = True
+
+        elif cmd == "l":
+            readingNumber = True
+
+    elif readingModeAmount == True:
         if cmd == ".":
             currentSelected = selected
             for i in range(0, int(''.join(modeAmount))):
@@ -195,7 +274,7 @@ def _parse(cmd):
         else:
             modeAmount.append(cmd)
 
-    if readingLoopAmount == True:
+    elif readingLoopAmount == True:
         if cmd == "|":
             readingLoopAmount = False
             readingLoopCode = True
@@ -383,6 +462,12 @@ def _parse(cmd):
         elif cmd == "x":
             readingRemove = True
 
+        elif cmd == "s":
+            tape[selected] = re.sub(r"(\w)([A-Z])", r"\1 \2", str(tape[selected]))
+
+        elif cmd == "j":
+            tape[selected] = ''.join(tape[selected])
+
         elif cmd == ".":
             string = False
 
@@ -541,27 +626,6 @@ def _parse(cmd):
     elif cmd == "L":
         tape[selected] = len(str(tape[selected]))
 
-    elif cmd == "\u00AB":
-        if tape[selected] < tape[selected-1]:
-            currentReturned = 1
-
-        else:
-            currentReturned == 0
-
-    elif cmd == "\u00BB":
-        if tape[selected] > tape[selected-1]:
-            currentReturned == 1
-
-        else:
-            currentReturned == 0
-
-    elif cmd == "\u00AF":
-        if tape[selected] == tape[selected-1]:
-            currentReturned == 1
-
-        else:
-            currentReturned == 0
-
     elif cmd == "G":
         graphics = True
 
@@ -574,9 +638,11 @@ def _parse(cmd):
     elif cmd == "Ö":
         print(currentReturned)
 
-    elif cmd == "ä":
-        pass
+    elif cmd == "Å":
+        commandSet2 = True
 
+    elif cmd == "C":
+        readingCount = True
     
 parser_stack = [_parse]
 
