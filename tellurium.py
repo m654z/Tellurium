@@ -70,6 +70,7 @@ ifInt = False
 ifStr = False
 ifFloat = False
 readingModeAmount = False
+readingRemove = False
 vName = []
 vName2 = []
 vText = []
@@ -87,8 +88,10 @@ loopAmount = []
 ifThis = []
 ifCode = []
 mode = []
+toRemove = []
 selected = 0
 modeAmount = []
+currentReturned = 0
 
 def read(cmd):
     if isinstance(cmd, str):
@@ -134,6 +137,7 @@ def _parse(cmd):
     global ifStr
     global ifFloat
     global readingModeAmount
+    global readingRemove
     global removing
     global tempName
     global tempText
@@ -142,14 +146,17 @@ def _parse(cmd):
     global text
     global rand
     global rand2
+    global selectingText
     global loopCode
     global loopAmount
     global readCode
     global ifThis
     global ifCode
     global mode
+    global toRemove
     global selected
     global modeAmount
+    global currentReturned
 
     if readingModeAmount == True:
         if cmd == ".":
@@ -311,7 +318,16 @@ def _parse(cmd):
             rand2.append(cmd)
 
     elif string == True:
-        if appendToFront == True:
+        if readingRemove == True:
+            if cmd == "~":
+                tape[selected] = str(tape[selected]).replace(''.join(toRemove), "")
+                readingRemove = False
+                toRemove = []
+
+            else:
+                toRemove.append(cmd)
+                
+        elif appendToFront == True:
             if cmd == "~":
                 tape[selected] = str(tape[selected]) + ''.join(tempText)
                 tempText = []
@@ -363,6 +379,9 @@ def _parse(cmd):
 
         elif cmd == "c":
             tape[selected] = str.capitalize(tape[selected])
+
+        elif cmd == "x":
+            readingRemove = True
 
         elif cmd == ".":
             string = False
@@ -488,7 +507,7 @@ def _parse(cmd):
         tape[selected] = int(input(">> "))
 
     elif cmd == "F":
-        tape[selected+1] = fib(tape[selected])
+        currentReturned = fib(tape[selected])
 
     elif cmd == "T":
         if str(type(tape[selected])) == "<class 'str'>":
@@ -500,6 +519,9 @@ def _parse(cmd):
         elif str(type(tape[selected])) == "<class 'float'>":
             print("Float")
 
+        elif str(type(tape[selected])) == "<class 'list'>":
+            print("List")
+
         else:
             print("Other")
 
@@ -507,7 +529,11 @@ def _parse(cmd):
         readingIf = True
 
     elif cmd == "P":
-        tape[selected+1] = isPrime(tape[selected])
+        if isPrime(tape[selected]):
+            currentReturned = 1
+
+        else:
+            currentReturned = 0
 
     elif cmd == "E":
         read(tape[selected])
@@ -517,30 +543,39 @@ def _parse(cmd):
 
     elif cmd == "\u00AB":
         if tape[selected] < tape[selected-1]:
-            tape[selected+1] == 1
+            currentReturned = 1
 
         else:
-            tape[selected+1] == 0
+            currentReturned == 0
 
     elif cmd == "\u00BB":
         if tape[selected] > tape[selected-1]:
-            tape[selected+1] == 1
+            currentReturned == 1
 
         else:
-            tape[selected+1] == 0
+            currentReturned == 0
 
     elif cmd == "\u00AF":
         if tape[selected] == tape[selected-1]:
-            tape[selected+1] == 1
+            currentReturned == 1
 
         else:
-            tape[selected+1] == 0
+            currentReturned == 0
 
     elif cmd == "G":
         graphics = True
 
     elif cmd == "M":
         readingModeAmount = True
+
+    elif cmd == "ö":
+        tape[selected] = currentReturned
+
+    elif cmd == "Ö":
+        print(currentReturned)
+
+    elif cmd == "ä":
+        pass
 
     
 parser_stack = [_parse]
