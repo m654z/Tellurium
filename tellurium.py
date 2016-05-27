@@ -6,6 +6,7 @@ import codecs
 import functools
 import operator
 import math
+import statistics
 
 INT_BINOPS = {
     "a": operator.add,
@@ -25,6 +26,7 @@ INPLACE_UNARYOPS = {
     "f": float,
     "%": ord,
     "£": chr,
+    "€": str,
     "r": lambda v: codecs.encode(str(v), 'rot_13'),
 }
 
@@ -67,6 +69,7 @@ isChar = False
 ifInt = False
 ifStr = False
 ifFloat = False
+readingModeAmount = False
 vName = []
 vName2 = []
 vText = []
@@ -83,7 +86,9 @@ loopCode = []
 loopAmount = []
 ifThis = []
 ifCode = []
+mode = []
 selected = 0
+modeAmount = []
 
 def read(cmd):
     if isinstance(cmd, str):
@@ -128,6 +133,7 @@ def _parse(cmd):
     global ifInt
     global ifStr
     global ifFloat
+    global readingModeAmount
     global removing
     global tempName
     global tempText
@@ -141,7 +147,46 @@ def _parse(cmd):
     global readCode
     global ifThis
     global ifCode
+    global mode
     global selected
+    global modeAmount
+
+    if readingModeAmount == True:
+        if cmd == ".":
+            currentSelected = selected
+            for i in range(0, int(''.join(modeAmount))):
+                selected += 1
+                mode.append(tape[selected])
+
+            selected = currentSelected
+            tape[selected] = statistics.mode(mode)
+            mode = []
+            modeAmount = []
+
+        elif cmd == ",":
+            currentSelected = selected
+            for i in range(0, int(''.join(modeAmount))):
+                selected += 1
+                mode.append(tape[selected])
+
+            selected = currentSelected
+            tape[selected] = statistics.median(mode)
+            mode = []
+            modeAmount = []
+
+        elif cmd == ";":
+            currentSelected = selected
+            for i in range(0, int(''.join(modeAmount))):
+                selected += 1
+                mode.append(tape[selected])
+
+            selected = currentSelected
+            tape[selected] = statistics.mean(mode)
+            mode = []
+            modeAmount = []
+
+        else:
+            modeAmount.append(cmd)
 
     if readingLoopAmount == True:
         if cmd == "|":
@@ -412,13 +457,13 @@ def _parse(cmd):
     elif cmd == "&":
         string = True
 
-    elif cmd == "→":
+    elif cmd == "\u2192":
         if rand != []:
             rand = []
 
         readingRand = True
 
-    elif cmd == "←":
+    elif cmd == "\u2190":
         if rand2 != []:
             rand2 = []
 
@@ -470,6 +515,34 @@ def _parse(cmd):
     elif cmd == "L":
         tape[selected] = len(str(tape[selected]))
 
+    elif cmd == "\u00AB":
+        if tape[selected] < tape[selected-1]:
+            tape[selected+1] == 1
+
+        else:
+            tape[selected+1] == 0
+
+    elif cmd == "\u00BB":
+        if tape[selected] > tape[selected-1]:
+            tape[selected+1] == 1
+
+        else:
+            tape[selected+1] == 0
+
+    elif cmd == "\u00AF":
+        if tape[selected] == tape[selected-1]:
+            tape[selected+1] == 1
+
+        else:
+            tape[selected+1] == 0
+
+    elif cmd == "G":
+        graphics = True
+
+    elif cmd == "M":
+        readingModeAmount = True
+
+    
 parser_stack = [_parse]
 
 
@@ -543,7 +616,12 @@ def fib(n):
     return a
 
 def isPrime(n):
-    return all(n % i for i in range(2, n))
+    trueFalse = all(n % i for i in range(2, n))
+    if trueFalse == True:
+        return(1)
+
+    else:
+        return(0)
 
 def parse(token):
     return parser_stack[-1](token)
