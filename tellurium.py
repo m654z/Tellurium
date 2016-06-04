@@ -295,7 +295,7 @@ def _parse(cmd):
             loopAmount.append(cmd)
 
     elif readingLoopCode == True:
-        if cmd == "]":
+        if cmd == ";":
             readingLoopCode = False
             
             if loopInf == True:

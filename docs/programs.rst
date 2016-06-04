@@ -52,20 +52,20 @@ Try it out. The output is now "Hello, (name)" instead of "Hello,[newline](name)"
 2.2.1 Countdown
 ---------------
 
-Loops in Tellurium are easy to use. The basic syntax is ``[times|code]``.
+Loops in Tellurium are easy to use. The basic syntax is ``[times|code;``.
 Let's create a countdown from 10 to 1.
 
-``/+[10|-^]``
+``/+[10|-^;``
 
 * ``/+`` adds eleven to the selected cell's value.
-* ``[10|-^]`` - subtracts one from the value and outputs it ten times.
+* ``[10|-^;`` - subtracts one from the value and outputs it ten times.
 
 2.2.2 Fancy countdown
 ---------------------
 
 Let's change the code from 2.2.1 to display the number at a speed of one per second. All you need to do is add the `¨` command, which waits 1 second before continuing.
 
-``/+[10|-^¨]``
+``/+[10|-^¨;``
 
 
 2.3 Functions
