@@ -643,6 +643,30 @@ def _parse(cmd):
 
     elif cmd == "C":
         readingCount = True
+
+    elif cmd == "b":
+        if tape[selected-1] > tape[selected]:
+            tape[selected+1] = 1
+
+        else:
+            tape[selected+1] = 0
+
+    elif cmd == "l":
+        if tape[selected-1] < tape[selected]:
+            tape[selected+1] = 1
+
+        else:
+            tape[selected+1] = 0
+
+    elif cmd == "U":
+        if tape[selected-1] == tape[selected]:
+            tape[selected+1] = 1
+
+        else:
+            tape[selected+1] = 0
+
+    elif cmd in "1234567890":
+        tape[selected] += int(cmd)
     
 parser_stack = [_parse]
 
