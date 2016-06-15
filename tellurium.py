@@ -8,6 +8,8 @@ import operator
 import math
 import statistics
 import re
+import zlib
+import base64
 
 INT_BINOPS = {
     "a": operator.add,
@@ -58,6 +60,7 @@ readingRand = False
 readingRand2 = False
 readingFName = False
 readingFCode = False
+readingAltCode = False
 appendToFront = False
 appendToBack = False
 readingIf = False
@@ -77,6 +80,7 @@ readingTimes = False
 readingCount = False
 readingLetter = False
 readingNumber = False
+readingAltCmd = False
 vName = []
 vName2 = []
 vText = []
@@ -99,8 +103,10 @@ times = []
 count = []
 letter = []
 number = []
+altCode = []
 selected = 0
 modeAmount = []
+tempFunc = ""
 currentReturned = 0
 
 def read(cmd):
@@ -133,6 +139,7 @@ def _parse(cmd):
     global readingFCode
     global readingIf
     global readingIfCode
+    global readingAltCode
     global appendToFront
     global appendToBack
     global loopInf
@@ -150,6 +157,7 @@ def _parse(cmd):
     global readingRemove
     global readingTimes
     global readingNumber
+    global readingAltCmd
     global commandSet2
     global removing
     global tempName
@@ -171,13 +179,58 @@ def _parse(cmd):
     global selected
     global modeAmount
     global number
+    global altCode
     global readingCount
     global times
     global count
     global letter
+    global tempFunc
     global currentReturned
 
-    if readingCount == True:
+    if readingAltCmd == True:
+        readingAltCmd = False
+        
+        if cmd == "i":
+            altCode = ''.join(altCode).split('|')
+            if tape[selected] == altCode[0]:
+                read(altCode[1])
+
+            altCode = []
+
+        elif cmd == "e":
+            altCode = ''.join(altCode).split('|')
+            if tape[selected] == altCode[0]:
+                read(altCode[1])
+
+            else:
+                read(altCode[2])
+
+            altCode = []
+
+        elif cmd == "f":
+            tempFunc = ''.join(altCode)
+            altCode = []
+
+        elif cmd == "r":
+            r = re.compile(''.join(altCode))
+            tape[selected] = r.sub('', tape[selected])
+
+        elif cmd == "d":
+            altCode = ''.join(altCode).encode("utf-8")
+            tape[selected] = zlib.decompress(altCode)
+
+        elif cmd == "b":
+            tape[selected] = base64.b64decode(''.join(altCode))
+
+    elif readingAltCode == True:
+        if cmd == "}":
+            readingAltCode = False
+            readingAltCmd = True
+
+        else:
+            altCode.append(cmd)
+
+    elif readingCount == True:
         if cmd == ".":
             readingCount = False
             currentReturned = str(tape[selected]).count(''.join(count))
@@ -186,7 +239,7 @@ def _parse(cmd):
         else:
             count.append(cmd)
 
-    if commandSet2 == True:
+    elif commandSet2 == True:
         if readingNumber == True:
             if cmd == ".":
                 if str(type(tape[selected])) == "<class 'list'>":
@@ -425,6 +478,7 @@ def _parse(cmd):
                 tape[selected] = ''.join(tempText) + str(tape[selected])
                 tempText = []
                 appendToBack = False
+
 
             elif cmd == "$":
                 tape[selected] = str(tape[selected-1]) + str(tape[selected])
@@ -665,7 +719,16 @@ def _parse(cmd):
         else:
             tape[selected+1] = 0
 
-    elif cmd in "1234567890":
+    elif cmd == "p":
+        tape[selected] = str(tape[selected]).split()
+
+    elif cmd == "{":
+        readingAltCode = True
+
+    elif cmd == "ä":
+        read(tempFunc)
+
+    elif cmd in "123456789":
         tape[selected] += int(cmd)
     
 parser_stack = [_parse]
